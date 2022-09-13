@@ -44,6 +44,7 @@ public interface Advisor {
 
 
 	/**
+     * 返回此方面的建议部分。一个通知可以是一个拦截器、一个之前的通知、一个抛出的通知等。@return 如果切入点匹配则应该应用的通知
 	 * Return the advice part of this aspect. An advice may be an
 	 * interceptor, a before advice, a throws advice, etc.
 	 * @return the advice that should apply if the pointcut matches

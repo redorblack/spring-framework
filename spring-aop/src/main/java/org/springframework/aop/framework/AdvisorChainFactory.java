@@ -23,7 +23,7 @@ import org.springframework.lang.Nullable;
 
 /**
  * Factory interface for advisor chains.
- *
+ * 通知链条
  * @author Rod Johnson
  * @author Juergen Hoeller
  */

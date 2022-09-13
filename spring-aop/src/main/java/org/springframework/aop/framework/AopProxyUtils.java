@@ -211,6 +211,8 @@ public abstract class AopProxyUtils {
 
 
 	/**
+     * 如有必要，使给定参数适应给定方法中的目标签名：特别是，
+     * 如果给定的可变参数数组与方法中声明的可变参数的数组类型不匹配。
 	 * Adapt the given arguments to the target signature in the given method,
 	 * if necessary: in particular, if a given vararg argument array does not
 	 * match the array type of the declared vararg parameter in the method.

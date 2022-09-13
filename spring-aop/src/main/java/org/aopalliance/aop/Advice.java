@@ -25,4 +25,6 @@ package org.aopalliance.aop;
  */
 public interface Advice {
 
+    //顶级接口 通知
+
 }

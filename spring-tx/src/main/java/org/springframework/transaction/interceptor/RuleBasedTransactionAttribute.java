@@ -133,7 +133,7 @@ public class RuleBasedTransactionAttribute extends DefaultTransactionAttribute i
 		if (logger.isTraceEnabled()) {
 			logger.trace("Applying rules to determine whether transaction should rollback on " + ex);
 		}
-
+        // 检查形异常 除了RunTimeException 都是检查异常
 		RollbackRuleAttribute winner = null;
 		int deepest = Integer.MAX_VALUE;
 

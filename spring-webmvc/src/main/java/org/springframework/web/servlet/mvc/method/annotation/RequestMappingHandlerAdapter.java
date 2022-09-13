@@ -771,6 +771,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
 
 		ModelAndView mav;
+        //检查请求
 		checkRequest(request);
 
 		// Execute invokeHandlerMethod in synchronized block if required.

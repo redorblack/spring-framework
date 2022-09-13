@@ -500,9 +500,11 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * <p>May be overridden in subclasses in order to initialize further strategy objects.
 	 */
 	protected void initStrategies(ApplicationContext context) {
+        //spring 容器初始化各种组建
 		initMultipartResolver(context);
 		initLocaleResolver(context);
 		initThemeResolver(context);
+        //映射器
 		initHandlerMappings(context);
 		initHandlerAdapters(context);
 		initHandlerExceptionResolvers(context);
@@ -908,7 +910,8 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	@Override
 	protected void doService(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logRequest(request);
+		//日志
+        logRequest(request);
 
 		// Keep a snapshot of the request attributes in case of an include,
 		// to be able to restore the original attributes after the include.
@@ -940,6 +943,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 
 		try {
+            //真正的处理方法
 			doDispatch(request, response);
 		}
 		finally {
@@ -1009,17 +1013,21 @@ public class DispatcherServlet extends FrameworkServlet {
 			Exception dispatchException = null;
 
 			try {
-				processedRequest = checkMultipart(request);
+                // 先检查是不是 Multipart 类型的，比如上传等；如果是 Multipart 类型的，则转换为 MultipartHttpServletRequest 类型
+                processedRequest = checkMultipart(request);
 				multipartRequestParsed = (processedRequest != request);
 
 				// Determine handler for the current request.
+                //请求获取对应的handMapping
 				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null) {
+                    //404 报错
 					noHandlerFound(processedRequest, response);
 					return;
 				}
 
 				// Determine handler adapter for the current request.
+                //handmapping 查询对应的处理器
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
 				// Process last-modified header, if supported by the handler.
@@ -1037,13 +1045,15 @@ public class DispatcherServlet extends FrameworkServlet {
 				}
 
 				// Actually invoke the handler.
+                //hand 处理控制器 返回 ModelAndView
 				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
 
 				if (asyncManager.isConcurrentHandlingStarted()) {
 					return;
 				}
-
+                 //需不需要改名字
 				applyDefaultViewName(processedRequest, mv);
+                //执行拦截器
 				mappedHandler.applyPostHandle(processedRequest, response, mv);
 			}
 			catch (Exception ex) {
@@ -1054,6 +1064,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				// making them available for @ExceptionHandler methods and other scenarios.
 				dispatchException = new NestedServletException("Handler dispatch failed", err);
 			}
+            //处理最后的结果
 			processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
 		}
 		catch (Exception ex) {
@@ -1115,6 +1126,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		// Did the handler return a view to render?
 		if (mv != null && !mv.wasCleared()) {
+            //渲染 视图
 			render(mv, request, response);
 			if (errorView) {
 				WebUtils.clearErrorRequestAttributes(request);
@@ -1230,7 +1242,8 @@ public class DispatcherServlet extends FrameworkServlet {
 	@Nullable
 	protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
 		if (this.handlerMappings != null) {
-			for (HandlerMapping mapping : this.handlerMappings) {
+            // 遍历所有的 handlerMappings 进行处理，handlerMappings 是在启动的时候预先注册好的
+            for (HandlerMapping mapping : this.handlerMappings) {
 				HandlerExecutionChain handler = mapping.getHandler(request);
 				if (handler != null) {
 					return handler;
@@ -1341,7 +1354,8 @@ public class DispatcherServlet extends FrameworkServlet {
 		// Determine locale for request and apply it to the response.
 		Locale locale =
 				(this.localeResolver != null ? this.localeResolver.resolveLocale(request) : request.getLocale());
-		response.setLocale(locale);
+		//本地化
+        response.setLocale(locale);
 
 		View view;
 		String viewName = mv.getViewName();
@@ -1370,6 +1384,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			if (mv.getStatus() != null) {
 				response.setStatus(mv.getStatus().value());
 			}
+            //委托
 			view.render(mv.getModelInternal(), request, response);
 		}
 		catch (Exception ex) {

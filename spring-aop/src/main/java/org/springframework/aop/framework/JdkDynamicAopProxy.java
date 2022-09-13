@@ -120,6 +120,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 		}
 		Class<?>[] proxiedInterfaces = AopProxyUtils.completeProxiedInterfaces(this.advised, true);
 		findDefinedEqualsAndHashCodeMethods(proxiedInterfaces);
+        //jdk 动态代理
 		return Proxy.newProxyInstance(classLoader, proxiedInterfaces, this);
 	}
 
@@ -191,7 +192,10 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 			// in case it comes from a pool.
 			target = targetSource.getTarget();
 			Class<?> targetClass = (target != null ? target.getClass() : null);
-
+            //核心重点
+            /***
+             * 执行器链
+             */
 			// Get the interception chain for this method.
 			List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
 
@@ -202,9 +206,12 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 				// Note that the final invoker must be an InvokerInterceptor so we know it does
 				// nothing but a reflective operation on the target, and no hot swapping or fancy proxying.
 				Object[] argsToUse = AopProxyUtils.adaptArgumentsIfNecessary(method, args);
+                //正常方法执行
 				retVal = AopUtils.invokeJoinpointUsingReflection(target, method, argsToUse);
 			}
 			else {
+                //方法 代理开始执行
+
 				// We need to create a method invocation...
 				MethodInvocation invocation =
 						new ReflectiveMethodInvocation(proxy, target, method, args, targetClass, chain);

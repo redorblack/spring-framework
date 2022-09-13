@@ -39,7 +39,7 @@ import org.springframework.util.Assert;
  * defined in later classes will override those defined in earlier classes. This can
  * be leveraged to deliberately override certain bean definitions via an extra
  * {@code @Configuration} class.
- *
+ * 注解启动
  * <p>See {@link Configuration @Configuration}'s javadoc for usage examples.
  *
  * @author Juergen Hoeller
@@ -85,6 +85,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 		this();
+        //入口
 		register(componentClasses);
 		refresh();
 	}

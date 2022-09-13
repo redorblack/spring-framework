@@ -54,7 +54,7 @@ import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolv
  * with {@code @javax.validation.Valid}. In case of validation failure,
  * {@link MethodArgumentNotValidException} is raised and results in an HTTP 400
  * response status code if {@link DefaultHandlerExceptionResolver} is configured.
- *
+ *RequestBody 源码
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
@@ -134,6 +134,7 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 		if (binderFactory != null) {
 			WebDataBinder binder = binderFactory.createBinder(webRequest, arg, name);
 			if (arg != null) {
+                //校验参数 jsr330
 				validateIfApplicable(binder, parameter);
 				if (binder.getBindingResult().hasErrors() && isBindExceptionRequired(binder, parameter)) {
 					throw new MethodArgumentNotValidException(parameter, binder.getBindingResult());

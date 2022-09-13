@@ -62,6 +62,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 		for (Advisor advisor : advisors) {
 			if (advisor instanceof PointcutAdvisor) {
 				// Add it conditionally.
+                //匹配
 				PointcutAdvisor pointcutAdvisor = (PointcutAdvisor) advisor;
 				if (config.isPreFiltered() || pointcutAdvisor.getPointcut().getClassFilter().matches(actualClass)) {
 					MethodMatcher mm = pointcutAdvisor.getPointcut().getMethodMatcher();
@@ -80,6 +81,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 						if (mm.isRuntime()) {
 							// Creating a new object instance in the getInterceptors() method
 							// isn't a problem as we normally cache created chains.
+                          //  在 getInterceptors() 方法中创建一个新的对象实例不是问题，因为我们通常会缓存创建的链。
 							for (MethodInterceptor interceptor : interceptors) {
 								interceptorList.add(new InterceptorAndDynamicMethodMatcher(interceptor, mm));
 							}

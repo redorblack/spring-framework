@@ -318,6 +318,7 @@ public abstract class AopUtils {
 				// already processed
 				continue;
 			}
+            // 这里匹配
 			if (canApply(candidate, clazz, hasIntroductions)) {
 				eligibleAdvisors.add(candidate);
 			}

@@ -51,7 +51,7 @@ import org.springframework.validation.annotation.Validated;
  * as well. By default, JSR-303 will validate against its default group only.
  *
  * <p>As of Spring 5.0, this functionality requires a Bean Validation 1.1+ provider.
- *
+ * Validated 注解
  * @author Juergen Hoeller
  * @since 3.1
  * @see MethodValidationInterceptor

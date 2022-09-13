@@ -83,6 +83,7 @@ final class PostProcessorRegistrationDelegate {
 			List<BeanDefinitionRegistryPostProcessor> currentRegistryProcessors = new ArrayList<>();
 
 			// First, invoke the BeanDefinitionRegistryPostProcessors that implement PriorityOrdered.
+             // 执行beanfactoryprocess 方法 自动装配
 			String[] postProcessorNames =
 					beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			for (String ppName : postProcessorNames) {
@@ -186,9 +187,32 @@ final class PostProcessorRegistrationDelegate {
 		beanFactory.clearMetadataCache();
 	}
 
+    /**
+     * 注册bean后置处理器
+     * @param beanFactory
+     * @param applicationContext
+     */
 	public static void registerBeanPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, AbstractApplicationContext applicationContext) {
 
+		// WARNING: Although it may appear that the body of this method can be easily
+		// refactored to avoid the use of multiple loops and multiple lists, the use
+		// of multiple lists and multiple passes over the names of processors is
+		// intentional. We must ensure that we honor the contracts for PriorityOrdered
+		// and Ordered processors. Specifically, we must NOT cause processors to be
+		// instantiated (via getBean() invocations) or registered in the ApplicationContext
+		// in the wrong order.
+
+		//警告：虽然看起来可以轻松地重构此方法的主体以避免使用多个循环和多个列表
+        // ，但使用多个列表和多次传递处理器名称是有意的。
+        // 我们必须确保我们遵守 PriorityOrdered 和 Ordered 处理器的合同。具体来说，
+        // 我们不能导致处理器被实例化（通过 getBean() 调用）或以错误的顺序在 ApplicationContext 中注册。
+		// Before submitting a pull request (PR) to change this method, please review the
+		// list of all declined PRs involving changes to PostProcessorRegistrationDelegate
+		// to ensure that your proposal does not result in a breaking change:
+		// https://github.com/spring-projects/spring-framework/issues?q=PostProcessorRegistrationDelegate+is%3Aclosed+label%3A%22status%3A+declined%22
+
+         //获取所有的后置处理器
 		String[] postProcessorNames = beanFactory.getBeanNamesForType(BeanPostProcessor.class, true, false);
 
 		// Register BeanPostProcessorChecker that logs an info message when

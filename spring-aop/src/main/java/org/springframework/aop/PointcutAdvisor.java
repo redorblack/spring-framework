@@ -17,6 +17,7 @@
 package org.springframework.aop;
 
 /**
+ * 由切入点驱动的所有通知的超级接口。这几乎涵盖了除介绍通知之外的所有通知，方法级别匹配不适用。
  * Superinterface for all Advisors that are driven by a pointcut.
  * This covers nearly all advisors except introduction advisors,
  * for which method-level matching doesn't apply.

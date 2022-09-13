@@ -178,6 +178,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 			// Validate the class, writing log messages as necessary.
 			validateClassIfNecessary(proxySuperClass, classLoader);
 
+            //cglib代理
 			// Configure CGLIB Enhancer...
 			Enhancer enhancer = createEnhancer();
 			if (classLoader != null) {
@@ -287,6 +288,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 		boolean isFrozen = this.advised.isFrozen();
 		boolean isStatic = this.advised.getTargetSource().isStatic();
 
+        //选择一个拦截切面
 		// Choose an "aop" interceptor (used for AOP calls).
 		Callback aopInterceptor = new DynamicAdvisedInterceptor(this.advised);
 
@@ -648,6 +650,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 
 
 	/**
+     * 通用 AOP 回调。当目标是动态的或代理未冻结时使用。
 	 * General purpose AOP callback. Used when the target is dynamic or when the
 	 * proxy is not frozen.
 	 */
@@ -675,10 +678,12 @@ class CglibAopProxy implements AopProxy, Serializable {
 				// Get as late as possible to minimize the time we "own" the target, in case it comes from a pool...
 				target = targetSource.getTarget();
 				Class<?> targetClass = (target != null ? target.getClass() : null);
+                //获取执行的拦截器链
 				List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
 				Object retVal;
 				// Check whether we only have one InvokerInterceptor: that is,
 				// no real advice, but just reflective invocation of the target.
+                //如果没有 则执行正常的方法
 				if (chain.isEmpty() && Modifier.isPublic(method.getModifiers())) {
 					// We can skip creating a MethodInvocation: just invoke the target directly.
 					// Note that the final invoker must be an InvokerInterceptor, so we know
@@ -723,6 +728,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 
 
 	/**
+     * 此 AOP 代理使用的 AOP Alliance MethodInvocation 的实现。
 	 * Implementation of AOP Alliance MethodInvocation used by this AOP proxy.
 	 */
 	private static class CglibMethodInvocation extends ReflectiveMethodInvocation {

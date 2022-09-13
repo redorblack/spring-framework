@@ -40,7 +40,7 @@ import org.springframework.util.Assert;
  *
  * <p>Processing of Spring Advisors follows the rules established in
  * {@link org.springframework.aop.framework.autoproxy.AbstractAdvisorAutoProxyCreator}.
- *
+ * 注解
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @since 2.0
@@ -89,9 +89,11 @@ public class AnnotationAwareAspectJAutoProxyCreator extends AspectJAwareAdvisorA
 	@Override
 	protected List<Advisor> findCandidateAdvisors() {
 		// Add all the Spring advisors found according to superclass rules.
+        //查询advisor
 		List<Advisor> advisors = super.findCandidateAdvisors();
 		// Build Advisors for all AspectJ aspects in the bean factory.
 		if (this.aspectJAdvisorsBuilder != null) {
+            //适配器
 			advisors.addAll(this.aspectJAdvisorsBuilder.buildAspectJAdvisors());
 		}
 		return advisors;

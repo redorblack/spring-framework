@@ -244,10 +244,12 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) {
 		Object cacheKey = getCacheKey(beanClass, beanName);
 
+        //是否之前已经包装过
 		if (!StringUtils.hasLength(beanName) || !this.targetSourcedBeans.contains(beanName)) {
 			if (this.advisedBeans.containsKey(cacheKey)) {
 				return null;
 			}
+            //判断
 			if (isInfrastructureClass(beanClass) || shouldSkip(beanClass, beanName)) {
 				this.advisedBeans.put(cacheKey, Boolean.FALSE);
 				return null;
@@ -263,8 +265,10 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 				this.targetSourcedBeans.add(beanName);
 			}
 			Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(beanClass, beanName, targetSource);
-			Object proxy = createProxy(beanClass, beanName, specificInterceptors, targetSource);
-			this.proxyTypes.put(cacheKey, proxy.getClass());
+			//代理
+            Object proxy = createProxy(beanClass, beanName, specificInterceptors, targetSource);
+			//缓存
+            this.proxyTypes.put(cacheKey, proxy.getClass());
 			return proxy;
 		}
 
@@ -296,6 +300,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (bean != null) {
 			Object cacheKey = getCacheKey(bean.getClass(), beanName);
 			if (this.earlyProxyReferences.remove(cacheKey) != bean) {
+                //包装 是否返回代理对象
 				return wrapIfNecessary(bean, beanName, cacheKey);
 			}
 		}
@@ -344,20 +349,24 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		}
 
 		// Create proxy if we have advice.
+        //需要被代理
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
 		if (specificInterceptors != DO_NOT_PROXY) {
 			this.advisedBeans.put(cacheKey, Boolean.TRUE);
+			//生成代理对象
 			Object proxy = createProxy(
 					bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
 			this.proxyTypes.put(cacheKey, proxy.getClass());
 			return proxy;
 		}
-
+        //包装成一个个 advise
 		this.advisedBeans.put(cacheKey, Boolean.FALSE);
 		return bean;
 	}
 
 	/**
+     * 返回给定的 bean 类是否代表一个不应该被代理的基础设施类。
+     * <p>默认实现将 Advices、Advisors 和 AopInfrastructureBeans 视为基础架构类。
 	 * Return whether the given bean class represents an infrastructure class
 	 * that should never be proxied.
 	 * <p>The default implementation considers Advices, Advisors and
@@ -445,7 +454,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (this.beanFactory instanceof ConfigurableListableBeanFactory) {
 			AutoProxyUtils.exposeTargetClass((ConfigurableListableBeanFactory) this.beanFactory, beanName, beanClass);
 		}
-
+       //代理工厂
 		ProxyFactory proxyFactory = new ProxyFactory();
 		proxyFactory.copyFrom(this);
 
@@ -457,17 +466,18 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 				evaluateProxyInterfaces(beanClass, proxyFactory);
 			}
 		}
-
+       //build 成 advisor 查询到对应的before 之类的拦截器
 		Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);
 		proxyFactory.addAdvisors(advisors);
 		proxyFactory.setTargetSource(targetSource);
+        //自定义代理工厂
 		customizeProxyFactory(proxyFactory);
 
 		proxyFactory.setFrozen(this.freezeProxy);
 		if (advisorsPreFiltered()) {
 			proxyFactory.setPreFiltered(true);
 		}
-
+        //如果 bean 类未在覆盖类加载器中本地加载，则使用原始 ClassLoader
 		return proxyFactory.getProxy(getProxyClassLoader());
 	}
 
@@ -509,6 +519,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 */
 	protected Advisor[] buildAdvisors(@Nullable String beanName, @Nullable Object[] specificInterceptors) {
 		// Handle prototypes correctly...
+        //    //解析所有的 InterceptorName 拦截器
 		Advisor[] commonInterceptors = resolveInterceptorNames();
 
 		List<Object> allInterceptors = new ArrayList<>();
@@ -535,6 +546,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 
 		Advisor[] advisors = new Advisor[allInterceptors.size()];
 		for (int i = 0; i < allInterceptors.size(); i++) {
+            //包装
 			advisors[i] = this.advisorAdapterRegistry.wrap(allInterceptors.get(i));
 		}
 		return advisors;
@@ -552,6 +564,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			if (cbf == null || !cbf.isCurrentlyInCreation(beanName)) {
 				Assert.state(bf != null, "BeanFactory required for resolving interceptor names");
 				Object next = bf.getBean(beanName);
+                //包装
 				advisors.add(this.advisorAdapterRegistry.wrap(next));
 			}
 		}

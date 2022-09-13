@@ -54,6 +54,11 @@ public interface AdvisorAdapterRegistry {
 	 * @return an array of MethodInterceptors to expose this Advisor's behavior
 	 * @throws UnknownAdviceTypeException if the Advisor type is
 	 * not understood by any registered AdvisorAdapter
+     *
+     * 返回一个 AOP Alliance MethodInterceptors 数组，以允许在基于拦截的框架中使用给定的 Advisor。
+     * <p>不要担心与 {@link Advisor} 关联的切入点，如果它是 {@link org.springframework.aop.PointcutAdvisor}：
+     * 只需返回一个拦截器。 @param advisor 为顾问寻找拦截器 @return 一组 MethodInterceptors 以公开此顾问的行为
+     * @throws UnknownAdviceTypeException 如果顾问类型不被任何注册的 AdvisorAdapter 理解
 	 */
 	MethodInterceptor[] getInterceptors(Advisor advisor) throws UnknownAdviceTypeException;
 

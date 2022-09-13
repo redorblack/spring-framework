@@ -28,6 +28,15 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ *
+ * 通用自动代理创建者，根据检测到的每个 bean 的顾问为特定 bean 构建 AOP 代理。
+ * <p>子类可以覆盖 {@link findCandidateAdvisors()} 方法以返回适用于任何对象的自定义顾问列表。
+ * 子类还可以覆盖继承的 {@link shouldSkip} 方法以从自动代理中排除某些对象。
+ *
+ *
+ */
+
+/**
  * Generic auto proxy creator that builds AOP proxies for specific beans
  * based on detected Advisors for each bean.
  *
@@ -75,6 +84,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	protected Object[] getAdvicesAndAdvisorsForBean(
 			Class<?> beanClass, String beanName, @Nullable TargetSource targetSource) {
 
+        //查询能用的增强器
 		List<Advisor> advisors = findEligibleAdvisors(beanClass, beanName);
 		if (advisors.isEmpty()) {
 			return DO_NOT_PROXY;
@@ -93,7 +103,9 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	 * @see #extendAdvisors
 	 */
 	protected List<Advisor> findEligibleAdvisors(Class<?> beanClass, String beanName) {
+        //
 		List<Advisor> candidateAdvisors = findCandidateAdvisors();
+        //能用
 		List<Advisor> eligibleAdvisors = findAdvisorsThatCanApply(candidateAdvisors, beanClass, beanName);
 		extendAdvisors(eligibleAdvisors);
 		if (!eligibleAdvisors.isEmpty()) {
@@ -125,6 +137,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 
 		ProxyCreationContext.setCurrentProxiedBeanName(beanName);
 		try {
+            //查找能用的增强其
 			return AopUtils.findAdvisorsThatCanApply(candidateAdvisors, beanClass);
 		}
 		finally {
