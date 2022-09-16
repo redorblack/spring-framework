@@ -174,6 +174,7 @@ public @interface EnableTransactionManagement {
 	 * time. This approach has no negative impact in practice unless one is explicitly
 	 * expecting one type of proxy vs another, e.g. in tests.
 	 */
+    //  // 使用spring aop运行时代理机制还是aspect j的静态编译策略
 	boolean proxyTargetClass() default false;
 
 	/**
@@ -186,6 +187,13 @@ public @interface EnableTransactionManagement {
 	 * scenario. For a more advanced mode of interception, consider switching this to
 	 * {@link AdviceMode#ASPECTJ}.
 	 */
+    /**
+     * 默认是{@link AdviceModePROXY}。<b>请注意代理模式只允许通过代理拦截调用。同一类中的本地调用不能以这种方式被拦截；本地调用中此类方法上的 {@link Transactional} 注释将被忽略
+     * ，因为 Spring 的拦截器甚至不会在此类运行时场景中启动。对于更高级的拦截模式，请考虑将其切换为
+     *
+     *
+     * @return
+     */
 	AdviceMode mode() default AdviceMode.PROXY;
 
 	/**

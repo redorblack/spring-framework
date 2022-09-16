@@ -43,6 +43,11 @@ import org.springframework.util.StringUtils;
 @SuppressWarnings("serial")
 public class SpringTransactionAnnotationParser implements TransactionAnnotationParser, Serializable {
 
+    /**
+     * 是否有Transactional 注解
+     * @param targetClass the class to introspect
+     * @return
+     */
 	@Override
 	public boolean isCandidateClass(Class<?> targetClass) {
 		return AnnotationUtils.isCandidateClass(targetClass, Transactional.class);
@@ -65,6 +70,11 @@ public class SpringTransactionAnnotationParser implements TransactionAnnotationP
 		return parseTransactionAnnotation(AnnotationUtils.getAnnotationAttributes(ann, false, false));
 	}
 
+    /**
+     * 解析注解的信息
+     * @param attributes
+     * @return
+     */
 	protected TransactionAttribute parseTransactionAnnotation(AnnotationAttributes attributes) {
 		RuleBasedTransactionAttribute rbta = new RuleBasedTransactionAttribute();
 

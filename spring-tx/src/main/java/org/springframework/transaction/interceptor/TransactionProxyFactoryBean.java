@@ -193,10 +193,12 @@ public class TransactionProxyFactoryBean extends AbstractSingletonProxyFactoryBe
 	protected Object createMainInterceptor() {
 		this.transactionInterceptor.afterPropertiesSet();
 		if (this.pointcut != null) {
+            //默认
 			return new DefaultPointcutAdvisor(this.pointcut, this.transactionInterceptor);
 		}
 		else {
 			// Rely on default pointcut.
+            //默认的事务包装
 			return new TransactionAttributeSourceAdvisor(this.transactionInterceptor);
 		}
 	}

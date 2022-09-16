@@ -39,7 +39,9 @@ import org.springframework.transaction.config.TransactionManagementConfigUtils;
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 public class AspectJJtaTransactionManagementConfiguration extends AspectJTransactionManagementConfiguration {
 
-	@Bean(name = TransactionManagementConfigUtils.JTA_TRANSACTION_ASPECT_BEAN_NAME)
+
+
+    @Bean(name = TransactionManagementConfigUtils.JTA_TRANSACTION_ASPECT_BEAN_NAME)
 	@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 	public JtaAnnotationTransactionAspect jtaTransactionAspect() {
 		JtaAnnotationTransactionAspect txAspect = JtaAnnotationTransactionAspect.aspectOf();

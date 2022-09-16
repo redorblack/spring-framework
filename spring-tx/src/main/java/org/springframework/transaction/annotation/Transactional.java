@@ -65,9 +65,17 @@ import org.springframework.transaction.TransactionDefinition;
  * @author Sam Brannen
  * @author Mark Paluch
  * @since 1.2
+ * // TransactionAttribute
  * @see org.springframework.transaction.interceptor.TransactionAttribute
  * @see org.springframework.transaction.interceptor.DefaultTransactionAttribute
  * @see org.springframework.transaction.interceptor.RuleBasedTransactionAttribute
+ */
+
+/**
+ * 事务注解
+ *
+ *
+ *
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

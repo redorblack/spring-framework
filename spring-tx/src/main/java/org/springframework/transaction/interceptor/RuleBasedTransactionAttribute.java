@@ -38,6 +38,11 @@ import org.springframework.lang.Nullable;
  * @since 09.04.2003
  * @see TransactionAttributeEditor
  */
+
+/**
+ * 回滚规则
+ *
+ */
 @SuppressWarnings("serial")
 public class RuleBasedTransactionAttribute extends DefaultTransactionAttribute implements Serializable {
 

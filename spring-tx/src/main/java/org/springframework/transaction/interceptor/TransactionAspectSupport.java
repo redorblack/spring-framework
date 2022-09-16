@@ -338,9 +338,11 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 
 		// If the transaction attribute is null, the method is non-transactional.
 		TransactionAttributeSource tas = getTransactionAttributeSource();
+        //获取注解的事务事务
 		final TransactionAttribute txAttr = (tas != null ? tas.getTransactionAttribute(method, targetClass) : null);
+        //获取事务管理器
 		final TransactionManager tm = determineTransactionManager(txAttr);
-
+        //反应式编程不管
 		if (this.reactiveAdapterRegistry != null && tm instanceof ReactiveTransactionManager) {
 			boolean isSuspendingFunction = KotlinDetector.isSuspendingFunction(method);
 			boolean hasSuspendingFlowReturnType = isSuspendingFunction &&
@@ -373,8 +375,9 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 			}
 			return result;
 		}
-
+        //转换
 		PlatformTransactionManager ptm = asPlatformTransactionManager(tm);
+        //切入点
 		final String joinpointIdentification = methodIdentification(method, targetClass, txAttr);
 
 		if (txAttr == null || !(ptm instanceof CallbackPreferringPlatformTransactionManager)) {
@@ -412,6 +415,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 			Object result;
 			final ThrowableHolder throwableHolder = new ThrowableHolder();
 
+            //编程式事务
 			// It's a CallbackPreferringPlatformTransactionManager: pass a TransactionCallback in.
 			try {
 				result = ((CallbackPreferringPlatformTransactionManager) ptm).execute(txAttr, status -> {
@@ -487,11 +491,12 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 		if (txAttr == null || this.beanFactory == null) {
 			return getTransactionManager();
 		}
-
+       //指定数据源头
 		String qualifier = txAttr.getQualifier();
 		if (StringUtils.hasText(qualifier)) {
 			return determineQualifiedTransactionManager(this.beanFactory, qualifier);
 		}
+        //名称查找
 		else if (StringUtils.hasText(this.transactionManagerBeanName)) {
 			return determineQualifiedTransactionManager(this.beanFactory, this.transactionManagerBeanName);
 		}
@@ -592,6 +597,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 		TransactionStatus status = null;
 		if (txAttr != null) {
 			if (tm != null) {
+                //获取事务状态
 				status = tm.getTransaction(txAttr);
 			}
 			else {
@@ -601,6 +607,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 				}
 			}
 		}
+        //准备事务信息
 		return prepareTransactionInfo(tm, txAttr, joinpointIdentification, status);
 	}
 

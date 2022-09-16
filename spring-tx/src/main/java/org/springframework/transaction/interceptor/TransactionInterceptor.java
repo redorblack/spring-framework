@@ -107,6 +107,13 @@ public class TransactionInterceptor extends TransactionAspectSupport implements 
 	}
 
 
+    /**
+     *
+     * aop invoke 方法
+     * @param invocation the method invocation joinpoint
+     * @return
+     * @throws Throwable
+     */
 	@Override
 	@Nullable
 	public Object invoke(MethodInvocation invocation) throws Throwable {
@@ -116,6 +123,7 @@ public class TransactionInterceptor extends TransactionAspectSupport implements 
 		Class<?> targetClass = (invocation.getThis() != null ? AopUtils.getTargetClass(invocation.getThis()) : null);
 
 		// Adapt to TransactionAspectSupport's invokeWithinTransaction...
+        //AOP调用
 		return invokeWithinTransaction(invocation.getMethod(), targetClass, new CoroutinesInvocationCallback() {
 			@Override
 			@Nullable

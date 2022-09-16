@@ -40,9 +40,15 @@ import org.springframework.util.Assert;
 @SuppressWarnings("serial")
 public class TransactionAttributeSourceAdvisor extends AbstractPointcutAdvisor {
 
+    /**
+     * 拦截器
+     */
 	@Nullable
 	private TransactionInterceptor transactionInterceptor;
 
+    /**
+     * 切入点
+     */
 	private final TransactionAttributeSourcePointcut pointcut = new TransactionAttributeSourcePointcut() {
 		@Override
 		@Nullable
@@ -83,12 +89,20 @@ public class TransactionAttributeSourceAdvisor extends AbstractPointcutAdvisor {
 	}
 
 
+    /**
+     * aop 框架返回 advice
+     * @return
+     */
 	@Override
 	public Advice getAdvice() {
 		Assert.state(this.transactionInterceptor != null, "No TransactionInterceptor set");
 		return this.transactionInterceptor;
 	}
 
+    /**
+     * 切入点
+     * @return
+     */
 	@Override
 	public Pointcut getPointcut() {
 		return this.pointcut;
